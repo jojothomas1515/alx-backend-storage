@@ -30,6 +30,7 @@ w_loop: LOOP
   UPDATE users SET average_score = wa_vg
     WHERE id = user_id;
 END LOOP;
+CLOSE curr;
 END; //
 
 -- change delimiter back to default
