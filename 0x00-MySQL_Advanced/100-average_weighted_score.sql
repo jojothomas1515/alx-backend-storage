@@ -6,7 +6,7 @@ delimiter //
 CREATE PROCEDURE ComputeAverageWeightedScoreForUser(IN user_id INT)
 BEGIN
 DECLARE w_d INT;
-DECLARE wa_vg INT;
+DECLARE wa_vg FLOAT;
 SET w_d = (SELECT SUM(weight) FROM projects);
 SELECT SUM((c.score * (p.weight / w_d))) INTO wa_vg
   FROM corrections AS c
