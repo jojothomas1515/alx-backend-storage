@@ -3,13 +3,13 @@
 delimiter //
 
 -- procedure
-CREATE PROCEDURE ComputeAverageWeightedScoreForUser(IN user_id INT)
+CREATE PROCEDURE ComputeAverageWeightedScoreForUsers()
 BEGIN
 -- local variables
-DECLARE w_d, user_id INT;
+DECLARE w_d, user_id, done INT;
 DECLARE wa_vg FLOAT;
 DECLARE curr CURSOR FOR SELECT id FROM users;
-DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
 -- open cursor
 OPEN curr;
@@ -19,7 +19,7 @@ SET w_d = (SELECT SUM(weight) FROM projects);
 
 w_loop: LOOP
   FETCH curr INTO user_id;
-  IF done THEN
+  IF done = 1 THEN
     LEAVE w_loop;
   END IF;
   SELECT SUM((c.score * (p.weight / w_d))) INTO wa_vg
