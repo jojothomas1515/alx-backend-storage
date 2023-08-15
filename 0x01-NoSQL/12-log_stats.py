@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 
-"""
-Logger.
-"""
+"""Logger."""
 
 from pymongo import MongoClient
 
 
 
 def main() -> None:
+    """This is the main method."""
     method = ["GET", "POST", "PUT", "PATCH", "DELETE"]
     client: MongoClient = MongoClient(host="localhost", port=27017)
     nginx_collection = client.logs.nginx
