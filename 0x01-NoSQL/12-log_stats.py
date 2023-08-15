@@ -7,11 +7,10 @@ Logger.
 from pymongo import MongoClient
 
 
-method = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 
-
-def main():
-    client = MongoClient(host="localhost", port=27017)
+def main() -> None:
+    method = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    client: MongoClient = MongoClient(host="localhost", port=27017)
     nginx_collection = client.logs.nginx
     total_count: int = nginx_collection.estimated_document_count()
     s_check: int = nginx_collection.count_documents({"method": "GET",
