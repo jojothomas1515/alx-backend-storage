@@ -14,15 +14,15 @@ def main():
     client = MongoClient("mongodb://127.0.0.1:27017")
     db = client.logs
     nginx_collection = db.nginx
-    print(f"{nginx_collection.estimated_document_count()} logs")
+    total_count: int = nginx_collection.estimated_document_count()
+    s_check: int = nginx_collection.count_documents({"method": "GET",
+                                                     "path": "/status"})
+    print(f"{total_count} logs")
     print("Methods")
     for i in method:
-        print(
-            f'\tmethod {i}: {nginx_collection.count_documents({"method":i})}'
-        )
-    print("{} status check"
-          .format(nginx_collection.count_documents(
-              {"method": "GET", "path": "/status"})))
+        method_count: int = nginx_collection.count_documents({"method":i})
+        print(f'\tmethod {i}: {method_count}')
+    print(f"{s_check} status check")
 
 
 if __name__ == '__main__':
