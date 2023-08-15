@@ -5,7 +5,6 @@
 from pymongo import MongoClient
 
 
-
 def main() -> None:
     """This is the main method."""
     method = ["GET", "POST", "PUT", "PATCH", "DELETE"]
@@ -17,7 +16,7 @@ def main() -> None:
     print(f"{total_count} logs")
     print("Methods")
     for i in method:
-        method_count: int = nginx_collection.count_documents({"method":i})
+        method_count: int = nginx_collection.count_documents({"method": i})
         print(f"\tmethod {i}: {method_count}")
     print(f"{s_check} status check")
 
