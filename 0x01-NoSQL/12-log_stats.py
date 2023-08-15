@@ -14,7 +14,7 @@ def main() -> None:
     s_check: int = nginx_collection.count_documents({"method": "GET",
                                                      "path": "/status"})
     print(f"{total_count} logs")
-    print("Methods")
+    print("Methods:")
     for i in method:
         method_count: int = nginx_collection.count_documents({"method": i})
         print(f"\tmethod {i}: {method_count}")
