@@ -9,7 +9,7 @@ import pymongo
 method = ["GET", "POST", "PUT", "PATCH", "DELETE"]
 
 
-def main():
+def main() -> None:
     client = pymongo.MongoClient("mongodb://127.0.0.1:27017")
     db = client.logs
     nginx_collection = db.nginx
