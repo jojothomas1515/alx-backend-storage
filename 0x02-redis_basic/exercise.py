@@ -9,16 +9,24 @@ from functools import wraps
 def count_calls(fn: Callable) -> Callable:
     """Decorator to know how many times a method was called."""
     @wraps(fn)
-    def wrapper(*args, **kwargs) -> Callable:
-        args[0]._redis.incr(str(fn.__qualname__))
-        return fn(*args, **kwargs)
+    def wrapper(self, *args, **kwargs) -> Callable:
+        self._redis.incr(str(fn.__qualname__))
+        return fn(self, *args, **kwargs)
     return wrapper
 
 
-# def call_history(fn: Callable) -> Callable:
-#     """records the history."""
-#     @wraps(fn)
-#     def wrapper(*ar)
+def call_history(fn: Callable) -> Callable:
+    """records the history."""
+    @wraps(fn)
+    def wrapper(self, *args, **kwargs) -> Callable:
+        in_key = f"{str(fn.__qualname__)}:inputs"
+        out_key = f"{str(fn.__qualname__)}:outputs"
+        self._redis.rpush(in_key, str(args))
+        results = fn(self, *args, **kwargs)
+        self._redis.rpush(out_key, results)
+        return results
+    return wrapper
+
 
 class Cache:
     """
@@ -30,6 +38,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
