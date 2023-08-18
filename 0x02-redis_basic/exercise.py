@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """Excercise."""
 import redis
-from typing import Union, Optional, Callable, Any
+from typing import Union, Optional, Callable
 from uuid import uuid4
 from functools import wraps
 
 
-def count_calls(fn: Callable[[object, *Any], Any])\
-        -> Callable[[object, *Any], Callable]:
+def count_calls(fn: Callable) -> Callable:
     """Decorator to know how many times a method was called."""
     @wraps(fn)
     def wrapper(self, *args, **kwargs) -> Callable:
