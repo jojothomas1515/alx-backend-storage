@@ -15,6 +15,22 @@ def count_calls(fn: Callable) -> Callable:
     return wrapper
 
 
+def replay(fn: Callable) -> None:
+    """Display replay."""
+    fn_name = str(fn.__qualname__)
+    in_key = f"{fn_name}:inputs"
+    out_key = f"{fn_name}:outputs"
+    red = redis.Redis()
+    c_counts = red.get(fn_name)
+
+    inp = red.lrange(in_key, 0, -1)
+    out = red.lrange(out_key, 0, -1)
+    res = zip(inp, out)
+    print(f"Cache.store was called {c_counts.decode('utf-8')} times:")
+    for i, o in res:
+        print(f"{fn_name}(*{i.decode('utf-8')}) -> {str(o.decode('utf-8'))}")
+
+
 def call_history(fn: Callable) -> Callable:
     """records the history."""
     @wraps(fn)

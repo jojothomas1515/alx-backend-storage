@@ -2,6 +2,7 @@
 """ Main file """
 
 Cache = __import__('exercise').Cache
+replay = __import__('exercise').replay
 
 cache = Cache()
 
@@ -19,3 +20,9 @@ outputs = cache._redis.lrange(
 
 print("inputs: {}".format(inputs))
 print("outputs: {}".format(outputs))
+
+cache = Cache()
+cache.store("foo")
+cache.store("bar")
+cache.store(42)
+replay(cache.store)
