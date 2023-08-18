@@ -9,11 +9,16 @@ from functools import wraps
 def count_calls(fn: Callable) -> Callable:
     """Decorator to know how many times a method was called."""
     @wraps(fn)
-    def wrapper(self, *args, **kwargs) -> Callable:
-        self._redis.incr(str(fn.__qualname__))
-        return fn(self, *args, **kwargs)
+    def wrapper(*args, **kwargs) -> Callable:
+        args[0]._redis.incr(str(fn.__qualname__))
+        return fn(*args, **kwargs)
     return wrapper
 
+
+# def call_history(fn: Callable) -> Callable:
+#     """records the history."""
+#     @wraps(fn)
+#     def wrapper(*ar)
 
 class Cache:
     """
