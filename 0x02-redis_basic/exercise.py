@@ -15,30 +15,30 @@ def count_calls(fn: Callable) -> Callable:
     return wrapper
 
 
-def replay(fn: Callable) -> None:
+def replay(method: Callable) -> None:
     """Display replay."""
-    fn_name = str(fn.__qualname__)
-    in_key = f"{fn_name}:inputs"
-    out_key = f"{fn_name}:outputs"
+    method_name = str(method.__qualname__)
+    in_key = f"{method_name}:inputs"
+    out_key = f"{method_name}:outputs"
     red = redis.Redis()
-    c_counts = red.get(fn_name)
+    c_counts = red.get(method_name)
 
     inp = red.lrange(in_key, 0, -1)
     out = red.lrange(out_key, 0, -1)
     res = zip(inp, out)
     print(f"Cache.store was called {c_counts.decode('utf-8')} times:")
     for i, o in res:
-        print(f"{fn_name}(*{i.decode('utf-8')}) -> {str(o.decode('utf-8'))}")
+        print(f"{method_name}(*{i.decode('utf-8')}) -> {str(o.decode('utf-8'))}")
 
 
-def call_history(fn: Callable) -> Callable:
+def call_history(method: Callable) -> Callable:
     """records the history."""
-    @wraps(fn)
+    @wraps(method)
     def wrapper(self, *args, **kwargs) -> Callable:
-        in_key = f"{str(fn.__qualname__)}:inputs"
-        out_key = f"{str(fn.__qualname__)}:outputs"
+        in_key = f"{str(method.__qualname__)}:inputs"
+        out_key = f"{str(method.__qualname__)}:outputs"
         self._redis.rpush(in_key, str(args))
-        results = fn(self, *args, **kwargs)
+        results = method(self, *args, **kwargs)
         self._redis.rpush(out_key, results)
         return results
     return wrapper
