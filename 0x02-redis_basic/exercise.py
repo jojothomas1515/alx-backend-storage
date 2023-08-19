@@ -6,12 +6,12 @@ from uuid import uuid4
 from functools import wraps
 
 
-def count_calls(fn: Callable) -> Callable:
+def count_calls(method: Callable) -> Callable:
     """Decorator to know how many times a method was called."""
-    @wraps(fn)
+    @wraps(method)
     def wrapper(self, *args, **kwargs) -> Callable:
-        self._redis.incr(str(fn.__qualname__))
-        return fn(self, *args, **kwargs)
+        self._redis.incr(str(method.__qualname__))
+        return method(self, *args, **kwargs)
     return wrapper
 
 
